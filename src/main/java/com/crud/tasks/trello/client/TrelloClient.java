@@ -9,6 +9,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -18,13 +19,15 @@ public class TrelloClient {
 
     @Value("${trello.api.endpoint.prod}")
     private String trelloApiEndpoint;
+    @Value("${trello.app.username}")
+    private String trelloUsername;
     @Value("${trello.app.key}")
     private String trelloAppKey;
     @Value("${trello.app.token}")
     private String trelloToken;
 
     public List<TrelloBoardDto> getTrelloBoards() {
-        URI url = UriComponentsBuilder.fromHttpUrl(trelloApiEndpoint + "/members/marcinpaszenda/boards")
+        URI url = UriComponentsBuilder.fromHttpUrl(trelloApiEndpoint + "/members/" + trelloUsername + "/boards")
                 .queryParam("key", trelloAppKey)
                 .queryParam("token", trelloToken)
                 .queryParam("fields", "name,id")
@@ -34,6 +37,10 @@ public class TrelloClient {
 
         return Optional.ofNullable(boardsResponse)
                 .map(Arrays::asList)
-                .orElse(Collections.emptyList());
+                .orElse(Collections.emptyList())
+                .stream()
+                .filter(p -> Objects.nonNull(p.getId()) && Objects.nonNull(p.getName()))
+                .filter(p -> p.getName().contains("Kodilla"))
+                .collect(Collectors.toList());
     }
 }
