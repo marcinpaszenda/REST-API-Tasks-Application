@@ -4,7 +4,7 @@ import lombok.*;
 
 @Getter
 @AllArgsConstructor
-@Builder(access = AccessLevel.PUBLIC)
+@Builder
 public class Mail {
     private final String mailTo;
     private final String subject;
