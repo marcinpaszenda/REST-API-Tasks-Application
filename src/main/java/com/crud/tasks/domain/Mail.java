@@ -4,7 +4,6 @@ import lombok.*;
 
 @Getter
 @AllArgsConstructor
-@RequiredArgsConstructor
 @Builder(access = AccessLevel.PUBLIC)
 public class Mail {
     private final String mailTo;
